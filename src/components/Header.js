@@ -3,6 +3,7 @@ import {
   MenuIcon,
   SearchIcon,
   ShoppingCartIcon,
+  XIcon,
 } from "@heroicons/react/outline";
 import { getSession, signIn, signOut, useSession } from "next-auth/client";
 import { useRouter } from "next/router";
@@ -11,6 +12,7 @@ import { selectItems } from "../slices/basketSlice";
 import { useState } from "react";
 import db from "../../firebase";
 function Header({ action = "/products" }) {
+  const [burgerStatus, setBurgerStatus] = useState(false);
   const [session] = useSession();
   const router = useRouter();
   const items = useSelector(selectItems);
@@ -84,7 +86,10 @@ function Header({ action = "/products" }) {
         </div>
       </div>
       <div className="flex items-center space-x-3 p-2 pl-6 bg-rtd_green-light text-white text-sm">
-        <p className="link flex items-center">
+        <p
+          className="link flex items-center"
+          onClick={() => setBurgerStatus(true)}
+        >
           <MenuIcon className="h-6 mr-1" />
           All
         </p>
@@ -101,6 +106,32 @@ function Header({ action = "/products" }) {
           Products
         </p>
       </div>
+      <nav
+        className={`z-50 fixed top-0  bottom-0 bg-rtd_green  p-4 text-white ${
+          burgerStatus ? "flex-cols" : "hidden"
+        }`}
+      >
+        <div>
+          <XIcon className="h-6 mr-1" onClick={() => setBurgerStatus(false)} />
+        </div>
+
+        <p onClick={() => router.push("/")} className="link">
+          Home
+        </p>
+
+        <p onClick={() => router.push("/about")} className="link">
+          About
+        </p>
+        <p onClick={() => router.push("/service")} className="link">
+          Service
+        </p>
+        <p onClick={() => router.push("/products")} className="link">
+          Products
+        </p>
+        <p onClick={() => router.push("/admin/dashboard")} className="link">
+          Dashboard
+        </p>
+      </nav>
     </header>
   );
 }

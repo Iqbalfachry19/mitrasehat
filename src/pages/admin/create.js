@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/client";
+import { getSession, useSession } from "next-auth/client";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Header from "../../components/Header";
@@ -6,8 +6,7 @@ import Sidebar from "../../components/Sidebar";
 import Head from "next/head";
 import db from "../../../firebase";
 
-function create() {
-  const [session] = useSession();
+function create({ session }) {
   const [nama, setNama] = useState("");
   const [harga, setHarga] = useState(0);
   const [deskripsi, setDeskripsi] = useState("");
@@ -33,7 +32,7 @@ function create() {
   return (
     <>
       {!session ? (
-        <div>
+        <div className=" h-screen overflow-y-hidden">
           <Head>
             <title>RTD Mitra Sehat | Tambah Produk</title>
           </Head>
@@ -151,3 +150,32 @@ function create() {
 }
 
 export default create;
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  const admins = await db
+    .collection("users")
+
+    .where("isAdmin", "==", true)
+    .get();
+  const admin = await Promise.all(
+    admins.docs.map(async (product) => ({
+      id: product.id,
+      isAdmin: product.data().isAdmin,
+    }))
+  ).catch((error) => {
+    console.log(error);
+  });
+
+  if (session?.user?.email == admin[0].id) {
+    return {
+      props: {
+        session: session,
+      },
+    };
+  } else {
+    return {
+      props: {},
+    };
+  }
+}

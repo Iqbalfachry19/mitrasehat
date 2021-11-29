@@ -35,7 +35,7 @@ function dashboard({ session }) {
   return (
     <>
       {!session ? (
-        <div>
+        <div className=" h-screen overflow-y-hidden">
           <Head>
             <title>RTD Mitra Sehat | Admin dashboard</title>
           </Head>
@@ -56,25 +56,25 @@ function dashboard({ session }) {
               <h1 className="text-xl border-b mb-2 pb-1 border-yellow-400 ">
                 Halaman admin
               </h1>
-              <table className="min-w-full border-collapse block md:table">
-                <thead className="block md:table-header-group">
-                  <tr className="border border-grey-500 md:border-none block md:table-row absolute -top-full md:top-auto -left-full md:left-auto  md:relative ">
-                    <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+              <table className="min-w-full border-collapse block md:table  ">
+                <thead className="block md:table-header-group ">
+                  <tr className="border border-gray-500 md:border-none block md:table-row absolute -top-full md:top-auto  -left-full md:left-auto  md:relative ">
+                    <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-gray-500 text-left block md:table-cell">
                       Nama Produk
                     </th>
-                    <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                    <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-gray-500 text-left block md:table-cell">
                       Harga Produk
                     </th>
-                    <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                    <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-gray-500 text-left block md:table-cell">
                       Kategori Produk
                     </th>
-                    <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                    <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-gray-500 text-left block md:table-cell">
                       Deskripsi Produk
                     </th>
-                    <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                    <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-gray-500 text-left block md:table-cell">
                       Gambar Produk
                     </th>
-                    <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                    <th className="bg-gray-600 p-2 text-white font-bold md:border md:border-gray-500 text-left block md:table-cell">
                       Actions
                     </th>
                   </tr>

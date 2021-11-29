@@ -1,13 +1,13 @@
-import { useSession } from "next-auth/client";
+import { getSession, useSession } from "next-auth/client";
 import React, { useEffect, useState } from "react";
 import Header from "../../../components/Header";
 import Sidebar from "../../../components/Sidebar";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import db from "../../../../firebase";
-function edit() {
+function edit({ session }) {
   const router = useRouter();
-  const [session] = useSession();
+
   const [nama, setNama] = useState("");
   const [harga, setHarga] = useState(0);
   const [deskripsi, setDeskripsi] = useState("");
@@ -37,11 +37,11 @@ function edit() {
         .collection("products")
         .doc(id)
         .onSnapshot((doc) => {
-          setNama(doc.data().title);
-          setHarga(doc.data().price);
-          setDeskripsi(doc.data().description);
-          setGambar(doc.data().image);
-          setKategori(doc.data().category);
+          setNama(doc.data()?.title);
+          setHarga(doc.data()?.price);
+          setDeskripsi(doc.data()?.description);
+          setGambar(doc.data()?.image);
+          setKategori(doc.data()?.category);
         }),
     [db, id]
   );
@@ -49,7 +49,7 @@ function edit() {
   return (
     <>
       {!session ? (
-        <div>
+        <div className=" h-screen overflow-y-hidden">
           <Head>
             <title>RTD Mitra Sehat | Edit Produk</title>
           </Head>
@@ -168,3 +168,32 @@ function edit() {
 }
 
 export default edit;
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  const admins = await db
+    .collection("users")
+
+    .where("isAdmin", "==", true)
+    .get();
+  const admin = await Promise.all(
+    admins.docs.map(async (product) => ({
+      id: product.id,
+      isAdmin: product.data().isAdmin,
+    }))
+  ).catch((error) => {
+    console.log(error);
+  });
+
+  if (session?.user?.email == admin[0].id) {
+    return {
+      props: {
+        session: session,
+      },
+    };
+  } else {
+    return {
+      props: {},
+    };
+  }
+}

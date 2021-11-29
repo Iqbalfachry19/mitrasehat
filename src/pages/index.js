@@ -5,7 +5,7 @@ import HeroImage from "../components/HeroImage";
 
 function products() {
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-100 h-screen overflow-y-hidden">
       <Head>
         <title>RTD Mitra Sehat</title>
       </Head>

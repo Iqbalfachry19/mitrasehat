@@ -4,7 +4,7 @@ function HeroImage() {
   return (
     <header
       id="up"
-      className="bg-center bg-fixed bg-no-repeat bg-hero-pattern-sm 2xl:bg-hero-pattern xl:bg-hero-pattern-xl lg:bg-hero-pattern-lg md:bg-hero-pattern-md sm:bg-hero-pattern-sm   bg-cover  h-screen relative"
+      className="bg-center overflow-y-hidden  bg-fixed bg-no-repeat bg-hero-pattern-sm 2xl:bg-hero-pattern xl:bg-hero-pattern-xl lg:bg-hero-pattern-lg md:bg-hero-pattern-md sm:bg-hero-pattern-sm   bg-cover  h-screen relative"
     >
       <div className="h-screen bg-opacity-50 bg-black flex items-center justify-center">
         <div className="mx-2 text-center">
