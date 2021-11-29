@@ -1,22 +1,23 @@
 import { useSession } from "next-auth/client";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-import Header from "../../components/Header";
-import Sidebar from "../../components/Sidebar";
+import React, { useEffect, useState } from "react";
+import Header from "../../../components/Header";
+import Sidebar from "../../../components/Sidebar";
 import Head from "next/head";
-import db from "../../../firebase";
-
-function create() {
+import { useRouter } from "next/router";
+import db from "../../../../firebase";
+function edit() {
+  const router = useRouter();
   const [session] = useSession();
   const [nama, setNama] = useState("");
   const [harga, setHarga] = useState(0);
   const [deskripsi, setDeskripsi] = useState("");
   const [gambar, setGambar] = useState("");
   const [kategori, setKategori] = useState("");
-  const router = useRouter();
-  const addProduct = () => {
+  const { id } = router.query;
+  const editProduk = () => {
     db.collection("products")
-      .add({
+      .doc(id)
+      .update({
         title: nama,
         price: harga,
         description: deskripsi,
@@ -30,12 +31,27 @@ function create() {
         console.error("Error adding document: ", error);
       });
   };
+  useEffect(
+    () =>
+      db
+        .collection("products")
+        .doc(id)
+        .onSnapshot((doc) => {
+          setNama(doc.data().title);
+          setHarga(doc.data().price);
+          setDeskripsi(doc.data().description);
+          setGambar(doc.data().image);
+          setKategori(doc.data().category);
+        }),
+    [db, id]
+  );
+
   return (
     <>
       {!session ? (
         <div>
           <Head>
-            <title>RTD Mitra Sehat | Tambah Produk</title>
+            <title>RTD Mitra Sehat | Edit Produk</title>
           </Head>
           <Header />
           <div className="flex justify-center h-screen items-center">
@@ -45,14 +61,14 @@ function create() {
       ) : (
         <div>
           <Head>
-            <title>RTD Mitra Sehat | Tambah Produk</title>
+            <title>RTD Mitra Sehat | Edit Produk</title>
           </Head>
           <Header />
           <div className="flex ">
             <Sidebar />
             <div className="flex flex-col justify-center mx-4 my-1 w-screen ">
               <h1 className="text-xl border-b mb-2 pb-1 border-yellow-400">
-                Tambah Produk
+                Edit Produk
               </h1>
               <div class="w-full ">
                 <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -66,6 +82,7 @@ function create() {
                     <input
                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="username"
+                      value={nama}
                       type="text"
                       placeholder="Nama Produk"
                       onChange={(e) => setNama(e.target.value)}
@@ -81,9 +98,9 @@ function create() {
                     <input
                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="username"
+                      value={harga}
                       type="text"
                       placeholder="Harga Produk"
-                      onChange={(e) => setHarga(e.target.value)}
                     />
                   </div>
                   <div class="mb-6">
@@ -97,8 +114,8 @@ function create() {
                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="username"
                       type="text"
+                      value={kategori}
                       placeholder="Kategori produk"
-                      onChange={(e) => setKategori(e.target.value)}
                     />
                   </div>
                   <div class="mb-6">
@@ -112,8 +129,8 @@ function create() {
                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="username"
                       type="text"
+                      value={deskripsi}
                       placeholder="Deskripsi produk"
-                      onChange={(e) => setDeskripsi(e.target.value)}
                     />
                   </div>
                   <div class="mb-6">
@@ -127,17 +144,17 @@ function create() {
                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="username"
                       type="text"
+                      value={gambar}
                       placeholder="Url gambar"
-                      onChange={(e) => setGambar(e.target.value)}
                     />
                   </div>
                   <div class="flex items-center justify-between">
                     <button
-                      onClick={addProduct}
+                      onClick={() => editProduk(id)}
                       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                       type="button"
                     >
-                      Tambah
+                      Ubah
                     </button>
                   </div>
                 </form>
@@ -150,4 +167,4 @@ function create() {
   );
 }
 
-export default create;
+export default edit;

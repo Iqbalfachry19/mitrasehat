@@ -4,11 +4,12 @@ import {
   SearchIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/outline";
-import { signIn, signOut, useSession } from "next-auth/client";
+import { getSession, signIn, signOut, useSession } from "next-auth/client";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { selectItems } from "../slices/basketSlice";
 import { useState } from "react";
+import db from "../../firebase";
 function Header({ action = "/products" }) {
   const [session] = useSession();
   const router = useRouter();
