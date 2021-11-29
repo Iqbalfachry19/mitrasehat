@@ -101,6 +101,7 @@ function edit({ session }) {
                       value={harga}
                       type="text"
                       placeholder="Harga Produk"
+                      onChange={(e) => setHarga(e.target.value)}
                     />
                   </div>
                   <div class="mb-6">
@@ -116,6 +117,7 @@ function edit({ session }) {
                       type="text"
                       value={kategori}
                       placeholder="Kategori produk"
+                      onChange={(e) => setKategori(e.target.value)}
                     />
                   </div>
                   <div class="mb-6">
@@ -131,6 +133,7 @@ function edit({ session }) {
                       type="text"
                       value={deskripsi}
                       placeholder="Deskripsi produk"
+                      onChange={(e) => setDeskripsi(e.target.value)}
                     />
                   </div>
                   <div class="mb-6">
@@ -146,6 +149,7 @@ function edit({ session }) {
                       type="text"
                       value={gambar}
                       placeholder="Url gambar"
+                      onChange={(e) => setGambar(e.target.value)}
                     />
                   </div>
                   <div class="flex items-center justify-between">
