@@ -122,7 +122,7 @@ function Header({ action = "/products" }) {
         <p onClick={() => router.push("/about")} className="link">
           About
         </p>
-        <p onClick={() => router.push("/service")} className="link">
+        <p onClick={() => router.push("/services")} className="link">
           Service
         </p>
         <p onClick={() => router.push("/products")} className="link">
