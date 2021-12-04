@@ -8,15 +8,17 @@ import Head from "next/head";
 function dashboard({ session }) {
   const [products, setProducts] = useState([]);
   const deleteProduct = (id) => {
-    db.collection("products")
-      .doc(id)
-      .delete()
-      .then(() => {
-        console.log("Document successfully deleted!");
-      })
-      .catch((error) => {
-        console.error("Error removing document: ", error);
-      });
+    if (confirm("ingin hapus data?")) {
+      db.collection("products")
+        .doc(id)
+        .delete()
+        .then(() => {
+          console.log("Document successfully deleted!");
+        })
+        .catch((error) => {
+          console.error("Error removing document: ", error);
+        });
+    }
   };
   useEffect(
     () =>

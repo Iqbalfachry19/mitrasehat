@@ -13,7 +13,9 @@ function create({ session }) {
   const [gambar, setGambar] = useState("");
   const [kategori, setKategori] = useState("");
   const router = useRouter();
-  const addProduct = () => {
+  const addProduct = (e) => {
+    e.preventDefault();
+
     db.collection("products")
       .add({
         title: nama,
@@ -54,7 +56,10 @@ function create({ session }) {
                 Tambah Produk
               </h1>
               <div class="w-full ">
-                <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <form
+                  onSubmit={addProduct}
+                  class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                >
                   <div class="mb-4">
                     <label
                       class="block text-gray-700 text-sm font-bold mb-2"
@@ -66,6 +71,7 @@ function create({ session }) {
                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="username"
                       type="text"
+                      required
                       placeholder="Nama Produk"
                       onChange={(e) => setNama(e.target.value)}
                     />
@@ -80,7 +86,9 @@ function create({ session }) {
                     <input
                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="username"
-                      type="text"
+                      type="number"
+                      min={1}
+                      required
                       placeholder="Harga Produk"
                       onChange={(e) => setHarga(e.target.value)}
                     />
@@ -97,6 +105,7 @@ function create({ session }) {
                       id="username"
                       type="text"
                       placeholder="Kategori produk"
+                      required
                       onChange={(e) => setKategori(e.target.value)}
                     />
                   </div>
@@ -111,6 +120,7 @@ function create({ session }) {
                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="username"
                       type="text"
+                      required
                       placeholder="Deskripsi produk"
                       onChange={(e) => setDeskripsi(e.target.value)}
                     />
@@ -126,15 +136,15 @@ function create({ session }) {
                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="username"
                       type="text"
+                      required
                       placeholder="Url gambar"
                       onChange={(e) => setGambar(e.target.value)}
                     />
                   </div>
                   <div class="flex items-center justify-between">
                     <button
-                      onClick={addProduct}
                       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                      type="button"
+                      type="submit"
                     >
                       Tambah
                     </button>
