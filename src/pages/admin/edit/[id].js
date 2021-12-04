@@ -5,6 +5,7 @@ import Sidebar from "../../../components/Sidebar";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import db from "../../../../firebase";
+import ErrorPage from "next/error";
 function edit({ session }) {
   const router = useRouter();
 
@@ -13,6 +14,7 @@ function edit({ session }) {
   const [deskripsi, setDeskripsi] = useState("");
   const [gambar, setGambar] = useState("");
   const [kategori, setKategori] = useState("");
+  const [data, setData] = useState(true);
   const { id } = router.query;
   const editProduk = () => {
     db.collection("products")
@@ -37,18 +39,22 @@ function edit({ session }) {
         .collection("products")
         .doc(id)
         .onSnapshot((doc) => {
-          setNama(doc.data()?.title);
-          setHarga(doc.data()?.price);
-          setDeskripsi(doc.data()?.description);
-          setGambar(doc.data()?.image);
-          setKategori(doc.data()?.category);
+          if (doc.exists) {
+            setNama(doc.data()?.title);
+            setHarga(doc.data()?.price);
+            setDeskripsi(doc.data()?.description);
+            setGambar(doc.data()?.image);
+            setKategori(doc.data()?.category);
+          } else {
+            setData(false);
+          }
         }),
     [db, id]
   );
 
   return (
     <>
-      {!session ? (
+      {!session || !data ? (
         <div className=" h-screen overflow-y-hidden">
           <Head>
             <title>RTD Mitra Sehat | Edit Produk</title>
@@ -90,13 +96,13 @@ function edit({ session }) {
                   </div>
                   <div class="mb-6">
                     <label
-                      class="block text-gray-700 text-sm font-bold mb-2"
+                      className="block text-gray-700 text-sm font-bold mb-2"
                       for="password"
                     >
                       Harga Produk
                     </label>
                     <input
-                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="username"
                       value={harga}
                       type="text"
@@ -104,9 +110,9 @@ function edit({ session }) {
                       onChange={(e) => setHarga(e.target.value)}
                     />
                   </div>
-                  <div class="mb-6">
+                  <div className="mb-6">
                     <label
-                      class="block text-gray-700 text-sm font-bold mb-2"
+                      className="block text-gray-700 text-sm font-bold mb-2"
                       for="password"
                     >
                       Kategori Produk
