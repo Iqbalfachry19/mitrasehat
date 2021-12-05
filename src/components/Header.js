@@ -9,13 +9,33 @@ import { getSession, signIn, signOut, useSession } from "next-auth/client";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { selectItems } from "../slices/basketSlice";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { adminState } from "../../atoms/adminAtom";
 import db from "../../firebase";
+import { useRecoilState } from "recoil";
 function Header({ action = "/products" }) {
   const [burgerStatus, setBurgerStatus] = useState(false);
+  const [admin, setAdmin] = useRecoilState(adminState);
   const [session] = useSession();
   const router = useRouter();
   const items = useSelector(selectItems);
+
+  useEffect(
+    () =>
+      db
+        .collection("users")
+        .where("isAdmin", "==", true)
+        .onSnapshot((doc) => {
+          const data = doc.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+
+          if (session?.user?.email == data[0].id) {
+            setAdmin(data[0].isAdmin);
+          } else {
+            setAdmin(false);
+          }
+        }),
+    [db, session]
+  );
   const preventDefault = (f) => (e) => {
     e.preventDefault();
     f(e);
@@ -128,9 +148,11 @@ function Header({ action = "/products" }) {
         <p onClick={() => router.push("/products")} className="link">
           Products
         </p>
-        <p onClick={() => router.push("/admin/dashboard")} className="link">
-          Dashboard
-        </p>
+        {admin && (
+          <p onClick={() => router.push("/admin/dashboard")} className="link">
+            Dashboard
+          </p>
+        )}
       </nav>
     </header>
   );
