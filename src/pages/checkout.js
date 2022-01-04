@@ -28,21 +28,21 @@ function Checkout() {
         // Optional
         onSuccess: function (result) {
           setResult(JSON.stringify(result, null, 2));
-          await axios.post("/api/webhook", { result }).catch((error) => {
+          axios.post("/api/notification", { result }).catch((error) => {
             console.error(error);
           });
         },
         // Optional
         onPending: function (result) {
           setResult(JSON.stringify(result, null, 2));
-          await axios.post("/api/webhook", { result }).catch((error) => {
+          axios.post("/api/notification", { result }).catch((error) => {
             console.error(error);
           });
         },
         // Optional
         onError: function (result) {
           setResult(JSON.stringify(result, null, 2));
-          await axios.post("/api/webhook", { result }).catch((error) => {
+          axios.post("/api/notification", { result }).catch((error) => {
             console.error(error);
           });
         },
