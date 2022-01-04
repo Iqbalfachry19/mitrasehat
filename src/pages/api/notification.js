@@ -16,18 +16,8 @@ export default async (req, res) => {
       .then((statusResponse) => {
         let orderId = statusResponse.order_id;
         let transactionStatus = statusResponse.transaction_status;
-        let fraudStatus = statusResponse?.fraud_status;
-        console.log(
-          `Transaction notification received. Order ID: ${orderId}. Transaction status: ${transactionStatus}. Fraud status: ${fraudStatus}`
-        );
 
-        if (transactionStatus == "capture") {
-          if (fraudStatus == "challenge") {
-            return res.status(200);
-          } else if (fraudStatus == "accept") {
-            return res.status(200);
-          }
-        } else if (transactionStatus == "settlement") {
+        if (transactionStatus == "settlement") {
           return res.status(200);
         } else if (transactionStatus == "deny") {
           return res.status(200);
