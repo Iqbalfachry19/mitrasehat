@@ -1,5 +1,5 @@
 const midtransClient = require("midtrans-client");
-const { uuid } = require("uuidv4");
+
 export default async (req, res) => {
   let apiClient = new midtransClient.Snap({
     isProduction: false,
@@ -12,7 +12,10 @@ export default async (req, res) => {
       let orderId = statusResponse.order_id;
       let transactionStatus = statusResponse.transaction_status;
       let fraudStatus = statusResponse.fraud_status;
-      console.log(`Transaction status ${transactionStatus}`);
+      console.log(
+        `Transaction notification received. Order ID: ${orderId}. Transaction status: ${transactionStatus}. Fraud status: ${fraudStatus}`
+      );
+
       if (transactionStatus == "capture") {
         if (fraudStatus == "challenge") {
         } else if (fraudStatus == "accept") {
