@@ -6,8 +6,8 @@ export default async (req, res) => {
   console.log(items);
   let snap = new midtransClient.Snap({
     isProduction: false,
-    serverKey: "SB-Mid-server-P0IDU0x1FG3Qquo3WMwVwfd0",
-    clientKey: "SB-Mid-client-4YeiDBDfHer6ImFz",
+    serverKey: process.env.NEXT_PUBLIC_MIDTRANS_SERVER_KEY,
+    clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY,
   });
   const transformedItems = items.map((item) => ({
     id: "ITEM1",
