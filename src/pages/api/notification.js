@@ -4,45 +4,13 @@ export default async (req, res) => {
   if (req.method === "GET") {
     res.status(200).json({ status: "success" });
   }
-  const [
-    transaction_time,
-    transaction_status,
-    transaction_id,
-    status_code,
-    signature_key,
-    status_message,
-    store,
-    settlement_time,
-    payment_type,
-    payment_code,
-    order_id,
-    merchant_id,
-    gross_amount,
-    currency,
-    approval_code,
-  ] = req.body;
+  console.log(req.body);
   let apiClient = new midtransClient.Snap({
     isProduction: false,
     serverKey: process.env.NEXT_PUBLIC_MIDTRANS_SERVER_KEY,
     clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY,
   });
-  let notificationJson = {
-    transaction_time,
-    transaction_status,
-    transaction_id,
-    store,
-    status_message,
-    status_code,
-    signature_key,
-    settlement_time,
-    payment_type,
-    payment_code,
-    order_id,
-    merchant_id,
-    gross_amount,
-    currency,
-    approval_code,
-  };
+  let notificationJson = req.body;
   apiClient.transaction
     .notification(notificationJson)
     .then((statusResponse) => {
