@@ -14,11 +14,13 @@ export default async (req, res) => {
       let orderId = statusResponse.order_id;
       let transactionStatus = statusResponse.transaction_status;
       let fraudStatus = statusResponse.fraud_status;
+      console.log(`Transaction status ${transactionStatus}`);
       if (transactionStatus == "capture") {
         if (fraudStatus == "challenge") {
         } else if (fraudStatus == "accept") {
         }
       } else if (transactionStatus == "settlement") {
+        res.status(200);
       } else if (transactionStatus == "deny") {
       } else if (
         transactionStatus == "cancel" ||
@@ -27,4 +29,10 @@ export default async (req, res) => {
       } else if (transactionStatus == "pending") {
       }
     });
+};
+export const config = {
+  api: {
+    bodyParser: false,
+    externalResolver: true,
+  },
 };
