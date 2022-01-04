@@ -18,18 +18,18 @@ export default async (req, res) => {
         let transactionStatus = statusResponse.transaction_status;
 
         if (transactionStatus == "settlement") {
-          return res.status(200).json({ status: "success" });
+          return res.status(200).send({ status: "success" });
         } else if (transactionStatus == "deny") {
-          return res.status(200).json({ status: "success" });
+          return res.status(200).send({ status: "success" });
         } else if (
           transactionStatus == "cancel" ||
           transactionStatus == "expire"
         ) {
-          return res.status(200).json({ status: "success" });
+          return res.status(200).send({ status: "success" });
         } else if (transactionStatus == "pending") {
-          return res.status(200).json({ status: "success" });
+          return res.status(200).send({ status: "success" });
         }
-        return res.status(200).json({ status: "success" });
+        return res.status(200).send({ status: "success" });
       })
       .catch((err) => {
         console.log("ERROR", err.message);
