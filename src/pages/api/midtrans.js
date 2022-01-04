@@ -10,7 +10,7 @@ export default async (req, res) => {
     clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY,
   });
   const transformedItems = items.map((item) => ({
-    id: "ITEM1",
+    id: item.id,
     price: item.price,
     quantity: 1,
     name: item.title,
