@@ -36,6 +36,9 @@ function Checkout() {
         // Optional
         onError: function (result) {
           setResult(JSON.stringify(result, null, 2));
+          await axios.post("/api/webhook", { result }).catch((error) => {
+            console.error(error);
+          });
         },
       });
     }
