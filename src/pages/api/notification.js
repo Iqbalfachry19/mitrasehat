@@ -1,7 +1,9 @@
 const midtransClient = require("midtrans-client");
 
 export default async (req, res) => {
-  res.status(200).json({ status: "success" });
+  if (method === "GET") {
+    res.status(200).json({ status: "success" });
+  }
   let apiClient = new midtransClient.Snap({
     isProduction: false,
     serverKey: process.env.NEXT_PUBLIC_MIDTRANS_SERVER_KEY,
