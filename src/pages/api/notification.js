@@ -23,24 +23,24 @@ export default async (req, res) => {
 
         if (transactionStatus == "capture") {
           if (fraudStatus == "challenge") {
-            res.status(200).json({ status: "ok" });
+            res.status(200);
           } else if (fraudStatus == "accept") {
-            res.status(200).json({ status: "ok" });
+            res.status(200);
           }
         } else if (transactionStatus == "settlement") {
-          res.status(200).json({ status: "ok" });
+          res.status(200);
         } else if (transactionStatus == "deny") {
-          res.status(200).json({ status: "ok" });
+          res.status(200);
         } else if (
           transactionStatus == "cancel" ||
           transactionStatus == "expire"
         ) {
-          res.status(200).json({ status: "ok" });
+          res.status(200);
         } else if (transactionStatus == "pending") {
-          res.status(200).json({ status: "ok" });
+          res.status(200);
         }
-        res.status(200).json({ status: "ok" });
-      });
+      })
+      .catch((err) => res.status(400).send(`Webhook Error: ${err.message}`));
   }
 };
 export const config = {
