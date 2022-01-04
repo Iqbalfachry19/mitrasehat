@@ -14,6 +14,7 @@ function Checkout() {
   const [value, setValue] = useState("A");
   const items = useSelector(selectItems);
   const total = useSelector(selectTotal);
+  const [result, setResult] = useState(null);
   const [session] = useSession();
   const createCheckoutSession = async () => {
     if (value === "A") {
@@ -27,6 +28,7 @@ function Checkout() {
       snap.pay(checkoutSession?.data.token, {
         // Optional
         onSuccess: function (result) {
+          console.log("success");
           setResult(JSON.stringify(result, null, 2));
           axios.post("/api/notification", { result }).catch((error) => {
             console.error(error);
@@ -34,6 +36,7 @@ function Checkout() {
         },
         // Optional
         onPending: function (result) {
+          console.log("pending");
           setResult(JSON.stringify(result, null, 2));
           axios.post("/api/notification", { result }).catch((error) => {
             console.error(error);
@@ -41,6 +44,7 @@ function Checkout() {
         },
         // Optional
         onError: function (result) {
+          console.log("error");
           setResult(JSON.stringify(result, null, 2));
           axios.post("/api/notification", { result }).catch((error) => {
             console.error(error);
