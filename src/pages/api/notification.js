@@ -18,25 +18,27 @@ export default async (req, res) => {
 
       if (transactionStatus == "capture") {
         if (fraudStatus == "challenge") {
+          res.status(200);
         } else if (fraudStatus == "accept") {
-          res.status(200).json({ status: transactionStatus });
+          res.status(200);
         }
       } else if (transactionStatus == "settlement") {
-        res.status(200).json({ name: transactionStatus });
+        res.status(200);
       } else if (transactionStatus == "deny") {
-        res.status(200).json({ status: transactionStatus });
+        res.status(200);
       } else if (
         transactionStatus == "cancel" ||
         transactionStatus == "expire"
       ) {
-        res.status(200).json({ status: transactionStatus });
+        res.status(200);
       } else if (transactionStatus == "pending") {
-        res.status(200).json({ status: transactionStatus });
+        res.status(200);
       }
     });
 };
 export const config = {
   api: {
+    bodyParser: false,
     externalResolver: true,
   },
 };
