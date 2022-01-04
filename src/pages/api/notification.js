@@ -19,15 +19,19 @@ export default async (req, res) => {
       if (transactionStatus == "capture") {
         if (fraudStatus == "challenge") {
         } else if (fraudStatus == "accept") {
+          res.status(200).json({ status: transactionStatus });
         }
       } else if (transactionStatus == "settlement") {
-        res.status(200);
+        res.status(200).json({ name: transactionStatus });
       } else if (transactionStatus == "deny") {
+        res.status(200).json({ status: transactionStatus });
       } else if (
         transactionStatus == "cancel" ||
         transactionStatus == "expire"
       ) {
+        res.status(200).json({ status: transactionStatus });
       } else if (transactionStatus == "pending") {
+        res.status(200).json({ status: transactionStatus });
       }
     });
 };
