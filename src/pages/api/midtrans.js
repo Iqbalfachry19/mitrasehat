@@ -27,6 +27,9 @@ export default async (req, res) => {
     credit_card: {
       secure: true,
     },
+    callbacks: {
+      finish: "https://iqbalfachry.xyz/success",
+    },
   };
 
   snap
