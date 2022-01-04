@@ -30,25 +30,16 @@ function Checkout() {
         onSuccess: function (result) {
           console.log("success");
           setResult(JSON.stringify(result, null, 2));
-          axios.post("/api/notification", { result }).catch((error) => {
-            console.error(error);
-          });
         },
         // Optional
         onPending: function (result) {
           console.log("pending");
           setResult(JSON.stringify(result, null, 2));
-          axios.post("/api/notification", { result }).catch((error) => {
-            console.error(error);
-          });
         },
         // Optional
         onError: function (result) {
           console.log("error");
           setResult(JSON.stringify(result, null, 2));
-          axios.post("/api/notification", { result }).catch((error) => {
-            console.error(error);
-          });
         },
       });
     }
