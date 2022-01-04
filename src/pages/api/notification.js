@@ -40,7 +40,10 @@ export default async (req, res) => {
           return res.status(200);
         }
       })
-      .catch((err) => res.status(400).send(`Webhook Error: ${err.message}`));
+      .catch((err) => {
+        console.log("ERROR", err.message);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+      });
   }
 };
 export const config = {
