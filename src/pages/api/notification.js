@@ -1,7 +1,7 @@
 const midtransClient = require("midtrans-client");
 
 export default async (req, res) => {
-  if (method === "GET") {
+  if (req.method === "GET") {
     res.status(200).json({ status: "success" });
   }
   let apiClient = new midtransClient.Snap({
