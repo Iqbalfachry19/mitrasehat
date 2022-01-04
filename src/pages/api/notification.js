@@ -11,7 +11,7 @@ export default async (req, res) => {
       clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY,
     });
     let notificationJson = req.body;
-    apiClient.transaction
+    await apiClient.transaction
       .notification(notificationJson)
       .then((statusResponse) => {
         let orderId = statusResponse.order_id;
@@ -23,21 +23,21 @@ export default async (req, res) => {
 
         if (transactionStatus == "capture") {
           if (fraudStatus == "challenge") {
-            res.status(200);
+            return res.status(200);
           } else if (fraudStatus == "accept") {
-            res.status(200);
+            return res.status(200);
           }
         } else if (transactionStatus == "settlement") {
-          res.status(200);
+          return res.status(200);
         } else if (transactionStatus == "deny") {
-          res.status(200);
+          return res.status(200);
         } else if (
           transactionStatus == "cancel" ||
           transactionStatus == "expire"
         ) {
-          res.status(200);
+          return res.status(200);
         } else if (transactionStatus == "pending") {
-          res.status(200);
+          return res.status(200);
         }
       })
       .catch((err) => res.status(400).send(`Webhook Error: ${err.message}`));
