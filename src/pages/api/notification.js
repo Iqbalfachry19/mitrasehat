@@ -29,6 +29,7 @@ export default async (req, res) => {
         } else if (transactionStatus == "pending") {
           return res.status(200);
         }
+        res.status(200).json({ status: "success" });
       })
       .catch((err) => {
         console.log("ERROR", err.message);
