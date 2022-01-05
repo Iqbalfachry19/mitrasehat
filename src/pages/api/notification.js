@@ -1,5 +1,12 @@
 const midtransClient = require("midtrans-client");
+import * as admin from "firebase-admin";
 
+const serviceAccount = require("../../../permissions.json");
+const app = !admin.apps.length
+  ? admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    })
+  : admin.app();
 export default async (req, res) => {
   if (req.method === "GET") {
     res.status(200).json({ status: "success" });
@@ -16,8 +23,30 @@ export default async (req, res) => {
       .then((statusResponse) => {
         let orderId = statusResponse.order_id;
         let transactionStatus = statusResponse.transaction_status;
+        if (transactionStatus == "capture") {
+          if (fraudStatus == "challenge") {
+          } else if (fraudStatus == "accept") {
+          }
+        } else if (transactionStatus == "settlement") {
+          app.auth().onAuthStateChange((user) => {
+            if (user) {
+              app
+                .firestore()
+                .collection("users")
+                .doc(user.email)
+                .collection("orders")
+                .doc(orderId)
+                .update({
+                  status: "settlement",
+                })
+                .then(() => {
+                  console.log(
+                    `SUCCESS: Order ${orderId} has been added to the DB`
+                  );
+                });
+            }
+          });
 
-        if (transactionStatus == "settlement") {
           return res.status(200).send({ status: "success" });
         } else if (transactionStatus == "deny") {
           return res.status(200).send({ status: "success" });
