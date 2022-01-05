@@ -1,5 +1,13 @@
 const midtransClient = require("midtrans-client");
 const { v4: uuidv4 } = require("uuid");
+import * as admin from "firebase-admin";
+
+const serviceAccount = require("../../../permissions.json");
+const app = !admin.apps.length
+  ? admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    })
+  : admin.app();
 // Create Snap API instance
 export default async (req, res) => {
   const { items, email, total } = req.body;
