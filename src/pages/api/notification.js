@@ -1,7 +1,7 @@
 import { getSession } from "next-auth/client";
 const midtransClient = require("midtrans-client");
 import * as admin from "firebase-admin";
-
+const axios = require("axios");
 const serviceAccount = require("../../../permissions.json");
 const app = !admin.apps.length
   ? admin.initializeApp({
@@ -10,8 +10,9 @@ const app = !admin.apps.length
   : admin.app();
 export default async (req, res) => {
   const session = await getSession({ req });
+
   if (req.method === "GET") {
-    res.status(200).json({ status: "success" });
+    res.status(200).json({ status: "success", email: session.user.email });
   } else if (req.method === "POST") {
     console.log(req.body);
     let apiClient = new midtransClient.Snap({
@@ -20,9 +21,11 @@ export default async (req, res) => {
       clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY,
     });
     let notificationJson = req.body;
-    await apiClient.transaction
+
+    apiClient.transaction
       .notification(notificationJson)
       .then((statusResponse) => {
+        console.log(statusResponse);
         let orderId = statusResponse.order_id;
         let transactionStatus = statusResponse.transaction_status;
         let fraudStatus = statusResponse.fraud_status;
@@ -34,14 +37,21 @@ export default async (req, res) => {
           app
             .firestore()
             .collection("users")
-            .doc(session.user.email)
-            .collection("orders")
-            .doc(orderId)
-            .update({
-              status: "settlement",
-            })
-            .then(() => {
-              console.log(`SUCCESS: Order ${orderId} has been added to the DB`);
+            .get()
+            .then((email) => {
+              email.forEach((doc) => {
+                doc.ref
+                  .collection("orders")
+                  .doc(orderId)
+                  .update({
+                    status: "settlement",
+                  })
+                  .then(() => {
+                    console.log(
+                      `SUCCESS: Order ${orderId} has been added to the DB`
+                    );
+                  });
+              });
             });
 
           return res.status(200).send({ status: "success" });
