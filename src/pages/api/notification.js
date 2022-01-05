@@ -28,24 +28,23 @@ export default async (req, res) => {
           } else if (fraudStatus == "accept") {
           }
         } else if (transactionStatus == "settlement") {
-          app.auth().onAuthStateChange((user) => {
-            if (user) {
-              app
-                .firestore()
-                .collection("users")
-                .doc(user.email)
-                .collection("orders")
-                .doc(orderId)
-                .update({
-                  status: "settlement",
-                })
-                .then(() => {
-                  console.log(
-                    `SUCCESS: Order ${orderId} has been added to the DB`
-                  );
-                });
-            }
-          });
+          //  get email from firebase admin auth
+
+          let user = app.auth().getUserByEmail(email);
+
+          console.log(user);
+          app
+            .firestore()
+            .collection("users")
+            .doc(user.email)
+            .collection("orders")
+            .doc(orderId)
+            .update({
+              status: "settlement",
+            })
+            .then(() => {
+              console.log(`SUCCESS: Order ${orderId} has been added to the DB`);
+            });
 
           return res.status(200).send({ status: "success" });
         } else if (transactionStatus == "deny") {
