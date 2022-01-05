@@ -1,3 +1,4 @@
+import { data } from "autoprefixer";
 import moment from "moment";
 import { getSession, useSession } from "next-auth/client";
 import Head from "next/head";
@@ -25,7 +26,15 @@ function Orders({ orders }) {
         )}
         <div className="mt-5 space-y-4">
           {orders?.map(
-            ({ id, amount, amountShipping, items, timestamp, images }) => (
+            ({
+              id,
+              amount,
+              amountShipping,
+              items,
+              timestamp,
+              images,
+              status,
+            }) => (
               <Order
                 key={id}
                 id={id}
@@ -34,6 +43,7 @@ function Orders({ orders }) {
                 items={items}
                 timestamp={timestamp}
                 images={images}
+                status={status}
               />
             )
           )}
@@ -62,15 +72,18 @@ export async function getServerSideProps(context) {
   const orders = await Promise.all(
     stripeOrders.docs.map(async (order) => ({
       id: order.id,
+      status: order.data().status ? order.data().status : null,
       amount: order.data().amount,
       amountShipping: order.data().amount_shipping,
       images: order.data().images,
       timestamp: moment(order.data().timestamp.toDate()).unix(),
-      items: (
-        await stripe.checkout.sessions.listLineItems(order.id, {
-          limit: 100,
-        })
-      ).data,
+      items: order.data().status
+        ? null
+        : (
+            await stripe.checkout.sessions.listLineItems(order.id, {
+              limit: 100,
+            })
+          ).data,
     }))
   );
 

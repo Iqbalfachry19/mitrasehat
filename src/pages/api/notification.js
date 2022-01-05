@@ -11,7 +11,6 @@ const app = !admin.apps.length
 export default async (req, res) => {
   const session = await getSession({ req });
   if (req.method === "GET") {
-    console.log(session);
     res.status(200).json({ status: "success" });
   } else if (req.method === "POST") {
     console.log(req.body);
@@ -31,8 +30,6 @@ export default async (req, res) => {
           } else if (fraudStatus == "accept") {
           }
         } else if (transactionStatus == "settlement") {
-          //  get email from firebase admin auth
-
           app
             .firestore()
             .collection("users")
