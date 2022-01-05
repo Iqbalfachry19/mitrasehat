@@ -1,4 +1,4 @@
-import { getSession } from "next-auth/react";
+import { getSession } from "next-auth/client";
 const midtransClient = require("midtrans-client");
 import * as admin from "firebase-admin";
 
