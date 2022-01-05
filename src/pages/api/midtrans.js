@@ -17,9 +17,8 @@ export default async (req, res) => {
     serverKey: process.env.NEXT_PUBLIC_MIDTRANS_SERVER_KEY,
     clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY,
   });
-  const transformedItemsImage = items.map((item) => ({
-    image: item.image,
-  }));
+  const transformedItemsImage = items.map((item) => item.image);
+
   const transformedItems = items.map((item) => ({
     id: item.id,
     price: item.price,
@@ -66,7 +65,9 @@ export default async (req, res) => {
           timestamp: admin.firestore.FieldValue.serverTimestamp(),
         })
         .then(() => {
-          console.log(`SUCCESS: Order ${session.id} has been added to the DB`);
+          console.log(
+            `SUCCESS: Order ${parameter.transaction_details.order_id} has been added to the DB`
+          );
         });
       res.status(200).json({ token: transactionToken, redirect: redirectUrl });
     })

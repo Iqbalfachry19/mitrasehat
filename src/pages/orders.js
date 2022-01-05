@@ -78,7 +78,8 @@ export async function getServerSideProps(context) {
       images: order.data().images,
       timestamp: moment(order.data().timestamp.toDate()).unix(),
       items: order.data().status
-        ? null
+        ? //find the length of the items array use map function
+          order.data().images.map((item) => item.length)
         : (
             await stripe.checkout.sessions.listLineItems(order.id, {
               limit: 100,
