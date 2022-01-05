@@ -11,6 +11,7 @@ const app = !admin.apps.length
 export default async (req, res) => {
   const session = await getSession({ req });
   if (req.method === "GET") {
+    console.log(session);
     res.status(200).json({ status: "success" });
   } else if (req.method === "POST") {
     console.log(req.body);
