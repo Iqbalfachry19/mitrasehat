@@ -25,6 +25,7 @@ export default async (req, res) => {
       .then((statusResponse) => {
         let orderId = statusResponse.order_id;
         let transactionStatus = statusResponse.transaction_status;
+        let fraudStatus = statusResponse.fraud_status;
         if (transactionStatus == "capture") {
           if (fraudStatus == "challenge") {
           } else if (fraudStatus == "accept") {
