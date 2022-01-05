@@ -1,3 +1,4 @@
+import { getSession } from "next-auth/react";
 const midtransClient = require("midtrans-client");
 import * as admin from "firebase-admin";
 
@@ -8,6 +9,7 @@ const app = !admin.apps.length
     })
   : admin.app();
 export default async (req, res) => {
+  const session = await getSession({ req });
   if (req.method === "GET") {
     res.status(200).json({ status: "success" });
   } else if (req.method === "POST") {
@@ -30,13 +32,10 @@ export default async (req, res) => {
         } else if (transactionStatus == "settlement") {
           //  get email from firebase admin auth
 
-          let user = app.auth().getUserByEmail(email);
-
-          console.log(user);
           app
             .firestore()
             .collection("users")
-            .doc(user.email)
+            .doc(session.user.email)
             .collection("orders")
             .doc(orderId)
             .update({
