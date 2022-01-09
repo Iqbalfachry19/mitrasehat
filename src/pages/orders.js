@@ -29,7 +29,7 @@ function Orders({ orders, orders1, orders2 }) {
   midtrans.push.apply(midtrans, midtrans1);
 
   midtrans.sort((a, b) => {
-    return new Date(a.date) - new Date(b.date);
+    return new Date(b.date) - new Date(a.date);
   });
   console.log(midtrans);
   return (
