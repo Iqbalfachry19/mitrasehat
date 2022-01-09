@@ -48,7 +48,7 @@ export default async (req, res) => {
                   })
                   .then(() => {
                     console.log(
-                      `SUCCESS: Order ${orderId} has been added to the DB`
+                      `SUCCESS: Order ${orderId} has been updated to the DB`
                     );
                   });
               });
@@ -61,8 +61,48 @@ export default async (req, res) => {
           transactionStatus == "cancel" ||
           transactionStatus == "expire"
         ) {
+          app
+            .firestore()
+            .collection("users")
+            .get()
+            .then((email) => {
+              email.forEach((doc) => {
+                doc.ref
+                  .collection("orders")
+                  .doc(orderId)
+                  .update({
+                    status: "failed",
+                  })
+                  .then(() => {
+                    console.log(
+                      `SUCCESS: Order ${orderId} has been updated to the DB`
+                    );
+                  });
+              });
+            });
+
           return res.status(200).send({ status: "success" });
         } else if (transactionStatus == "pending") {
+          app
+            .firestore()
+            .collection("users")
+            .get()
+            .then((email) => {
+              email.forEach((doc) => {
+                doc.ref
+                  .collection("orders")
+                  .doc(orderId)
+                  .update({
+                    status: "pending",
+                  })
+                  .then(() => {
+                    console.log(
+                      `SUCCESS: Order ${orderId} has been updated to the DB`
+                    );
+                  });
+              });
+            });
+
           return res.status(200).send({ status: "success" });
         }
         return res.status(200).send({ status: "success" });

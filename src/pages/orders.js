@@ -2,13 +2,14 @@ import { data } from "autoprefixer";
 import moment from "moment";
 import { getSession, useSession } from "next-auth/client";
 import Head from "next/head";
+import { useEffect, useState } from "react";
 import db from "../../firebase";
 import Header from "../components/Header";
 import Order from "../components/Order";
 
 function Orders({ orders }) {
   const [session] = useSession();
-  // console.log(orders)
+
   return (
     <div>
       <Head>
