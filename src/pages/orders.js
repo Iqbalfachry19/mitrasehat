@@ -14,7 +14,7 @@ function Orders({ orders }) {
   const encodedToken = Buffer.from(token).toString("base64");
   const headers = {
     Authorization: "Basic " + encodedToken,
-
+    "Access-Control-Allow-Origin": "*",
     "Content-type": "application/json",
     Accept: "application/json",
   };
