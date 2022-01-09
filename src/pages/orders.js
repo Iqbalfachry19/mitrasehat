@@ -8,31 +8,17 @@ import db from "../../firebase";
 import Header from "../components/Header";
 import Order from "../components/Order";
 
-function Orders({ orders }) {
+function Orders({ orders, orders1, orders2 }) {
   const [session] = useSession();
-  const token = `${process.env.NEXT_PUBLIC_MIDTRANS_SERVER_KEY}:`;
-  const encodedToken = Buffer.from(token).toString("base64");
-  const headers = {
-    Authorization: "Basic " + encodedToken,
-    "Access-Control-Allow-Origin": "*",
-    "Content-type": "application/json",
-    Accept: "application/json",
-  };
-  const [transactionStatus, setTransactionStatus] = useState(null);
-  orders.map(async (order) => {
-    await axios
-      .get(`https://api.sandbox.midtrans.com/v2/${order.id}/status`, {
-        headers,
-      })
-      .then((res) => {
-        setTransactionStatus(res.data.transaction_status);
-        console.log(res.data.order_id);
-        console.log(res.data.transaction_status);
-      })
-      .catch((err) => {
-        err.message;
-      });
+
+  const midtrans = orders1.map((order) => {
+    return order.transaction_status;
   });
+  const midtrans1 = orders2.map((order) => {
+    return order.status;
+  });
+  midtrans.push.apply(midtrans, midtrans1);
+
   return (
     <div>
       <Head>
@@ -50,28 +36,24 @@ function Orders({ orders }) {
         )}
         <div className="mt-5 space-y-4">
           {orders?.map(
-            ({
-              id,
-              amount,
-              amountShipping,
-              items,
-              timestamp,
-              images,
-              status,
-            }) => (
-              <Order
-                key={id}
-                id={id}
-                amount={amount}
-                amountShipping={amountShipping}
-                items={items}
-                timestamp={timestamp}
-                images={images}
-                status={
-                  status == transactionStatus ? status : transactionStatus
-                }
-              />
-            )
+            (
+              { id, amount, amountShipping, items, timestamp, images, status },
+              index
+            ) => {
+              const status1 = midtrans[index];
+              return (
+                <Order
+                  key={id}
+                  id={id}
+                  amount={amount}
+                  amountShipping={amountShipping}
+                  items={items}
+                  timestamp={timestamp}
+                  images={images}
+                  status={status == status1 ? status : "error"}
+                />
+              );
+            }
           )}
         </div>
       </main>
@@ -82,6 +64,13 @@ function Orders({ orders }) {
 export default Orders;
 
 export async function getServerSideProps(context) {
+  const midtransClient = require("midtrans-client");
+  let apiClient = new midtransClient.Snap({
+    isProduction: false,
+    serverKey: process.env.NEXT_PUBLIC_MIDTRANS_SERVER_KEY,
+    clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY,
+  });
+
   const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
   const session = await getSession(context);
   if (!session) {
@@ -89,6 +78,7 @@ export async function getServerSideProps(context) {
       props: {},
     };
   }
+
   const stripeOrders = await db
     .collection("users")
     .doc(session.user.email)
@@ -113,10 +103,35 @@ export async function getServerSideProps(context) {
           ).data,
     }))
   );
+  const substring = "cs";
 
+  const midTransOrders = orders.filter(({ id }) => {
+    return !id.includes(substring);
+  });
+  const midTransOrders1 = orders.filter(({ id }) => {
+    return id.includes(substring);
+  });
+  const orders1 = await Promise.all(
+    midTransOrders.map(async (order) => {
+      return await apiClient.transaction
+        .status(order.id)
+
+        .catch((err) => console);
+    })
+  );
+
+  const orders2 = await Promise.all(
+    midTransOrders1.map(async (order) => ({
+      id: order.id,
+      status: order.status,
+    }))
+  );
+  console.log(orders2);
   return {
     props: {
       orders,
+      orders1,
+      orders2,
     },
   };
 }
