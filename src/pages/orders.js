@@ -14,6 +14,7 @@ function Orders({ orders, orders1, orders2 }) {
   const midtrans = orders1.map((order) => {
     return order.transaction_status;
   });
+
   const midtrans1 = orders2.map((order) => {
     return order.status;
   });
@@ -41,6 +42,8 @@ function Orders({ orders, orders1, orders2 }) {
               index
             ) => {
               const status1 = midtrans[index];
+              console.log(status);
+
               return (
                 <Order
                   key={id}
@@ -50,7 +53,7 @@ function Orders({ orders, orders1, orders2 }) {
                   items={items}
                   timestamp={timestamp}
                   images={images}
-                  status={status == status1 ? status : "error"}
+                  status={status == status1 ? status : status}
                 />
               );
             }
