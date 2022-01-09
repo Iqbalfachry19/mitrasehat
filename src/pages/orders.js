@@ -1,4 +1,5 @@
 import { data } from "autoprefixer";
+import axios from "axios";
 import moment from "moment";
 import { getSession, useSession } from "next-auth/client";
 import Head from "next/head";
@@ -9,7 +10,29 @@ import Order from "../components/Order";
 
 function Orders({ orders }) {
   const [session] = useSession();
+  const token = `${process.env.NEXT_PUBLIC_MIDTRANS_SERVER_KEY}:`;
+  const encodedToken = Buffer.from(token).toString("base64");
+  const headers = {
+    Authorization: "Basic " + encodedToken,
 
+    "Content-type": "application/json",
+    Accept: "application/json",
+  };
+  const [transactionStatus, setTransactionStatus] = useState(null);
+  orders.map(async (order) => {
+    await axios
+      .get(`https://api.sandbox.midtrans.com/v2/${order.id}/status`, {
+        headers,
+      })
+      .then((res) => {
+        setTransactionStatus(res.data.transaction_status);
+        console.log(res.data.order_id);
+        console.log(res.data.transaction_status);
+      })
+      .catch((err) => {
+        err.message;
+      });
+  });
   return (
     <div>
       <Head>
@@ -44,7 +67,9 @@ function Orders({ orders }) {
                 items={items}
                 timestamp={timestamp}
                 images={images}
-                status={status}
+                status={
+                  status == transactionStatus ? status : transactionStatus
+                }
               />
             )
           )}

@@ -57,10 +57,7 @@ export default async (req, res) => {
           return res.status(200).send({ status: "success" });
         } else if (transactionStatus == "deny") {
           return res.status(200).send({ status: "success" });
-        } else if (
-          transactionStatus == "cancel" ||
-          transactionStatus == "expire"
-        ) {
+        } else if (transactionStatus == "cancel") {
           app
             .firestore()
             .collection("users")
@@ -71,7 +68,29 @@ export default async (req, res) => {
                   .collection("orders")
                   .doc(orderId)
                   .update({
-                    status: "failed",
+                    status: "cancel",
+                  })
+                  .then(() => {
+                    console.log(
+                      `SUCCESS: Order ${orderId} has been updated to the DB`
+                    );
+                  });
+              });
+            });
+
+          return res.status(200).send({ status: "success" });
+        } else if (transactionStatus == "expire") {
+          app
+            .firestore()
+            .collection("users")
+            .get()
+            .then((email) => {
+              email.forEach((doc) => {
+                doc.ref
+                  .collection("orders")
+                  .doc(orderId)
+                  .update({
+                    status: "expire",
                   })
                   .then(() => {
                     console.log(
