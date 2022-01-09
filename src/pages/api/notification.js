@@ -45,6 +45,7 @@ export default async (req, res) => {
                   .doc(orderId)
                   .update({
                     status: "settlement",
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
                   })
                   .then(() => {
                     console.log(
@@ -69,6 +70,7 @@ export default async (req, res) => {
                   .doc(orderId)
                   .update({
                     status: "cancel",
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
                   })
                   .then(() => {
                     console.log(
@@ -91,6 +93,7 @@ export default async (req, res) => {
                   .doc(orderId)
                   .update({
                     status: "expire",
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
                   })
                   .then(() => {
                     console.log(
@@ -113,6 +116,7 @@ export default async (req, res) => {
                   .doc(orderId)
                   .update({
                     status: "pending",
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
                   })
                   .then(() => {
                     console.log(

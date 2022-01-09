@@ -12,14 +12,26 @@ function Orders({ orders, orders1, orders2 }) {
   const [session] = useSession();
 
   const midtrans = orders1.map((order) => {
-    return order.transaction_status;
+    return {
+      date: new Date(
+        order.settlement_time ? order.settlement_time : order.transaction_time
+      ),
+      status: order.transaction_status,
+    };
   });
 
   const midtrans1 = orders2.map((order) => {
-    return order.status;
+    return {
+      date: new Date(order.date),
+      status: order.status,
+    };
   });
   midtrans.push.apply(midtrans, midtrans1);
 
+  midtrans.sort((a, b) => {
+    return new Date(a.date) - new Date(b.date);
+  });
+  console.log(midtrans);
   return (
     <div>
       <Head>
@@ -42,7 +54,6 @@ function Orders({ orders, orders1, orders2 }) {
               index
             ) => {
               const status1 = midtrans[index];
-              console.log(status);
 
               return (
                 <Order
@@ -96,6 +107,7 @@ export async function getServerSideProps(context) {
       amountShipping: order.data().amount_shipping,
       images: order.data().images,
       timestamp: moment(order.data().timestamp.toDate()).unix(),
+      date: order.data().timestamp.toDate().toDateString(),
       items: order.data().status
         ? //find the length of the items array use map function
           order.data().images.map((item) => item.length)
@@ -126,6 +138,7 @@ export async function getServerSideProps(context) {
   const orders2 = await Promise.all(
     midTransOrders1.map(async (order) => ({
       id: order.id,
+      date: order.date,
       status: order.status,
     }))
   );
