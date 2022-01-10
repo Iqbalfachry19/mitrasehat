@@ -69,17 +69,6 @@ function Checkout() {
         // Optional
         onError: function (result) {
           console.log("error");
-          db.collection("users")
-            .doc(session.user.email)
-            .collection("orders")
-            .doc(checkoutSession.data.orderId)
-            .set({
-              status: "pending",
-              amount: checkoutSession.data.amount,
-              amount_shipping: 10000,
-              images: checkoutSession.data.images,
-              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            });
 
           setResult(JSON.stringify(result, null, 2));
         },
