@@ -11,6 +11,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import db from "../../firebase";
+import firebase from "firebase";
 const stripePromise = loadStripe(process.env.stripe_public_key);
 function Checkout() {
   const router = useRouter();
@@ -38,7 +39,7 @@ function Checkout() {
             .doc(checkoutSession.data.orderId)
             .set({
               status: "pending",
-              amount: checkoutSession.data.orderId.amount,
+              amount: checkoutSession.data.amount,
               amount_shipping: 10000,
               images: checkoutSession.data.images,
               timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -52,7 +53,7 @@ function Checkout() {
             .doc(checkoutSession.data.orderId)
             .set({
               status: "pending",
-              amount: checkoutSession.data.orderId.amount,
+              amount: checkoutSession.data.amount,
               amount_shipping: 10000,
               images: checkoutSession.data.images,
               timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -68,7 +69,7 @@ function Checkout() {
             .doc(checkoutSession.data.orderId)
             .set({
               status: "pending",
-              amount: checkoutSession.data.orderId.amount,
+              amount: checkoutSession.data.amount,
               amount_shipping: 10000,
               images: checkoutSession.data.images,
               timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -84,7 +85,7 @@ function Checkout() {
             .doc(checkoutSession.data.orderId)
             .set({
               status: "pending",
-              amount: checkoutSession.data.orderId.amount,
+              amount: checkoutSession.data.amount,
               amount_shipping: 10000,
               images: checkoutSession.data.images,
               timestamp: firebase.firestore.FieldValue.serverTimestamp(),
