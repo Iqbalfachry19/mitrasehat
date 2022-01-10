@@ -9,8 +9,11 @@ import { useSession } from "next-auth/client";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import { useState } from "react";
+import { useRouter } from "next/router";
+import db from "../../firebase";
 const stripePromise = loadStripe(process.env.stripe_public_key);
 function Checkout() {
+  const router = useRouter();
   const [value, setValue] = useState("A");
   const items = useSelector(selectItems);
   const total = useSelector(selectTotal);
@@ -27,18 +30,30 @@ function Checkout() {
       // SnapToken acquired from previous step
       snap.pay(checkoutSession?.data.token, {
         // Optional
+        onClose: function () {
+          /* You may add your own implementation here */
+
+          db.collection("users")
+            .doc(session.user.email)
+            .collection("orders")
+            .doc(checkoutSession.data.orderId)
+            .delete();
+        },
         onSuccess: function (result) {
           console.log("success");
+          router.push("/success");
           setResult(JSON.stringify(result, null, 2));
         },
         // Optional
         onPending: function (result) {
           console.log("pending");
+          router.push("/orders");
           setResult(JSON.stringify(result, null, 2));
         },
         // Optional
         onError: function (result) {
           console.log("error");
+
           setResult(JSON.stringify(result, null, 2));
         },
       });

@@ -134,7 +134,7 @@ export async function getServerSideProps(context) {
         .catch((err) => console);
     })
   );
-
+  console.log(orders1);
   const orders2 = await Promise.all(
     midTransOrders1.map(async (order) => ({
       id: order.id,
@@ -143,7 +143,7 @@ export async function getServerSideProps(context) {
       status: order.status,
     }))
   );
-  console.log(orders2);
+
   return {
     props: {
       orders,

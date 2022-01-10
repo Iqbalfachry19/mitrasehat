@@ -69,7 +69,13 @@ export default async (req, res) => {
             `SUCCESS: Order ${parameter.transaction_details.order_id} has been added to the DB`
           );
         });
-      res.status(200).json({ token: transactionToken, redirect: redirectUrl });
+      res
+        .status(200)
+        .json({
+          token: transactionToken,
+          redirect: redirectUrl,
+          orderId: parameter.transaction_details.order_id,
+        });
     })
     .catch((err) => {
       res.status(400).send(`Error: ${err.message}`);
