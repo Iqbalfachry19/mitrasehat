@@ -33,17 +33,6 @@ function Checkout() {
         // Optional
         onClose: function () {
           /* You may add your own implementation here */
-          db.collection("users")
-            .doc(session.user.email)
-            .collection("orders")
-            .doc(checkoutSession.data.orderId)
-            .set({
-              status: "pending",
-              amount: checkoutSession.data.amount,
-              amount_shipping: 10000,
-              images: checkoutSession.data.images,
-              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            });
         },
         onSuccess: function (result) {
           console.log("success");
