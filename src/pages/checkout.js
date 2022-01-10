@@ -41,18 +41,43 @@ function Checkout() {
         },
         onSuccess: function (result) {
           console.log("success");
-          router.push("/success");
+          db.collection("users")
+            .doc(session.user.email)
+            .collection("orders")
+            .doc(checkoutSession.data.orderId)
+            .set({
+              status: "pending",
+              amount: checkoutSession.data.orderId.amount,
+              amount_shipping: 10000,
+              images: checkoutSession.data.images,
+              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            });
           setResult(JSON.stringify(result, null, 2));
         },
         // Optional
         onPending: function (result) {
           console.log("pending");
-          router.push("/orders");
+          db.collection("users")
+            .doc(session.user.email)
+            .collection("orders")
+            .doc(checkoutSession.data.orderId)
+            .set({
+              status: "pending",
+              amount: checkoutSession.data.orderId.amount,
+              amount_shipping: 10000,
+              images: checkoutSession.data.images,
+              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            });
           setResult(JSON.stringify(result, null, 2));
         },
         // Optional
         onError: function (result) {
           console.log("error");
+          db.collection("users")
+            .doc(session.user.email)
+            .collection("orders")
+            .doc(checkoutSession.data.orderId)
+            .delete();
 
           setResult(JSON.stringify(result, null, 2));
         },

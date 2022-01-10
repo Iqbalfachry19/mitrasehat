@@ -51,31 +51,14 @@ export default async (req, res) => {
       let transactionToken = transaction.token;
       let redirectUrl = transaction.redirect_url;
       console.log("transactionToken:", transactionToken);
-      app
-        .firestore()
-        .collection("users")
-        .doc(email)
-        .collection("orders")
-        .doc(parameter.transaction_details.order_id)
-        .set({
-          status: "pending",
-          amount: parameter.transaction_details.gross_amount,
-          amount_shipping: 10000,
-          images: transformedItemsImage,
-          timestamp: admin.firestore.FieldValue.serverTimestamp(),
-        })
-        .then(() => {
-          console.log(
-            `SUCCESS: Order ${parameter.transaction_details.order_id} has been added to the DB`
-          );
-        });
-      res
-        .status(200)
-        .json({
-          token: transactionToken,
-          redirect: redirectUrl,
-          orderId: parameter.transaction_details.order_id,
-        });
+
+      res.status(200).json({
+        token: transactionToken,
+        redirect: redirectUrl,
+        orderId: parameter.transaction_details.order_id,
+        amount: parameter.transaction_details.gross_amount,
+        images: transformedItemsImage,
+      });
     })
     .catch((err) => {
       res.status(400).send(`Error: ${err.message}`);
