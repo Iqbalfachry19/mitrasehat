@@ -1,7 +1,7 @@
 import Header from "../components/Header";
 import Head from "next/head";
 import Image from "next/image";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectItems, selectTotal } from "../slices/basketSlice";
 import CheckoutProduct from "../components/CheckoutProduct";
 import Currency from "react-currency-formatter";
@@ -11,9 +11,11 @@ import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import db from "../../firebase";
+import { reset } from "../slices/basketSlice";
 import firebase from "firebase";
 const stripePromise = loadStripe(process.env.stripe_public_key);
 function Checkout() {
+  const dispatch = useDispatch();
   const router = useRouter();
   const [value, setValue] = useState("A");
   const items = useSelector(selectItems);
@@ -64,6 +66,7 @@ function Checkout() {
               timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             });
           setResult(JSON.stringify(result, null, 2));
+          dispatch(reset());
           router.push("/orders");
         },
         // Optional
