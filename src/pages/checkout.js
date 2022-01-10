@@ -41,7 +41,7 @@ function Checkout() {
             .collection("orders")
             .doc(checkoutSession.data.orderId)
             .set({
-              status: "pending",
+              status: "settlement",
               amount: checkoutSession.data.amount,
               amount_shipping: 10000,
               images: checkoutSession.data.images,
