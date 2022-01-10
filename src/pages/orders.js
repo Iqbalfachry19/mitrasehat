@@ -53,7 +53,7 @@ function Orders({ orders, orders1, orders2 }) {
               { id, amount, amountShipping, items, timestamp, images, status },
               index
             ) => {
-              const status1 = midtrans[index];
+              const status1 = midtrans[index].status;
 
               return (
                 <Order
@@ -64,7 +64,7 @@ function Orders({ orders, orders1, orders2 }) {
                   items={items}
                   timestamp={timestamp}
                   images={images}
-                  status={status == status1 ? status : status}
+                  status={status == status1 ? status : "error"}
                 />
               );
             }
@@ -107,7 +107,7 @@ export async function getServerSideProps(context) {
       amountShipping: order.data().amount_shipping,
       images: order.data().images,
       timestamp: moment(order.data().timestamp.toDate()).unix(),
-      date: order.data().timestamp.toDate().toDateString(),
+      date: order.data().timestamp.toDate().toString(),
       items: order.data().status
         ? //find the length of the items array use map function
           order.data().images.map((item) => item.length)
@@ -138,6 +138,7 @@ export async function getServerSideProps(context) {
   const orders2 = await Promise.all(
     midTransOrders1.map(async (order) => ({
       id: order.id,
+
       date: order.date,
       status: order.status,
     }))
