@@ -77,7 +77,13 @@ function Checkout() {
             .doc(session.user.email)
             .collection("orders")
             .doc(checkoutSession.data.orderId)
-            .delete();
+            .set({
+              status: "pending",
+              amount: checkoutSession.data.orderId.amount,
+              amount_shipping: 10000,
+              images: checkoutSession.data.images,
+              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            });
 
           setResult(JSON.stringify(result, null, 2));
         },
