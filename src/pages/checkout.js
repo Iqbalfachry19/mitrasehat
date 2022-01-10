@@ -64,6 +64,7 @@ function Checkout() {
               timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             });
           setResult(JSON.stringify(result, null, 2));
+          router.push("/orders");
         },
         // Optional
         onError: function (result) {
