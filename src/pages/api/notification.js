@@ -2,7 +2,8 @@ import { getSession } from "next-auth/client";
 const midtransClient = require("midtrans-client");
 import * as admin from "firebase-admin";
 const axios = require("axios");
-const serviceAccount = require("../../../permissions.json");
+const serviceAccounts = require("../../../permissions.js");
+const serviceAccount = JSON.parse(JSON.stringify(serviceAccounts));
 const app = !admin.apps.length
   ? admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
