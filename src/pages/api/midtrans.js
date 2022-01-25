@@ -2,7 +2,7 @@ const midtransClient = require("midtrans-client");
 const { v4: uuidv4 } = require("uuid");
 import * as admin from "firebase-admin";
 
-const serviceAccounts = require("../../../permissions.js");
+const serviceAccounts = require("../../../permissions.js").firebase;
 const serviceAccount = JSON.parse(JSON.stringify(serviceAccounts));
 const app = !admin.apps.length
   ? admin.initializeApp({
